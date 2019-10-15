@@ -5,11 +5,14 @@ import com.lambdaschool.school.model.ErrorDetail;
 import com.lambdaschool.school.service.CourseService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/courses")
@@ -18,7 +21,7 @@ public class CourseController
     @Autowired
     private CourseService courseService;
 
-    // Adding custom swagger documentation for list all courses
+    // Adding custom swagger documentation for list all courses with paging
     @ApiOperation(value = "Return all Courses", response = Course.class,
             responseContainer = "List")
     @ApiImplicitParams({
@@ -31,6 +34,27 @@ public class CourseController
                     value = "Sorting criteria in the format: property(,asc|desc). " +
                             "Default sort order is ascending. " +
                             "Multiple sort criteria are supported.")})
+
+    // paging and sorting
+    // localhost:2019/courses/courses/paging/?page=1&size=10
+    @GetMapping(value = "/courses/paging",
+            produces = {"application/json"})
+    public ResponseEntity<?> ListAllCoursesByPage(@PageableDefault(page = 0,
+            size = 5) Pageable pageable)
+    {                        // findAllPageable(pageable.unpaged()) <- returns everything
+        List<Course> myCourses = courseService.findAllPageable(pageable);
+        return new ResponseEntity<>(myCourses, HttpStatus.OK);
+    }
+
+    // Adding custom swagger documentation for list all courses
+    @ApiOperation(value = "Return all Courses", response = Course.class,
+            responseContainer = "List")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "Course List Found",
+            response = Course.class),
+            @ApiResponse(code = 404,
+                    message = "Course List Not Found",
+                    response = ErrorDetail.class)})
 
     @GetMapping(value = "/courses", produces = {"application/json"})
     public ResponseEntity<?> listAllCourses()

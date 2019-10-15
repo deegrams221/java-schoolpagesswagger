@@ -25,7 +25,7 @@ public class StudentController
     @Autowired
     private StudentService studentService;
 
-    // Adding custom swagger documentation for list all students
+    // Adding custom swagger documentation for list all students with paging
     @ApiOperation(value = "Return all students",
             response = Student.class,
             responseContainer = "List")
@@ -43,12 +43,23 @@ public class StudentController
     // localhost:2019/students/students/paging/?page=1&size=10
     @GetMapping(value = "/students/paging",
             produces = {"application/json"})
-    public ResponseEntity<?> ListAllRestaurantsByPage(@PageableDefault(page = 0,
+    public ResponseEntity<?> ListAllStudentsByPage(@PageableDefault(page = 0,
             size = 5) Pageable pageable)
     {                        // findAllPageable(pageable.unpaged()) <- returns everything
-        List<Student> myRestaurants = studentService.findAllPageable(pageable);
-        return new ResponseEntity<>(myRestaurants, HttpStatus.OK);
+        List<Student> myStudents = studentService.findAllPageable(pageable);
+        return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
+
+    // Adding custom swagger documentation for list all students
+    @ApiOperation(value = "Return all students",
+            response = Student.class,
+            responseContainer = "List")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "Student List Found",
+            response = Student.class),
+            @ApiResponse(code = 404,
+                    message = "Student List Not Found",
+                    response = ErrorDetail.class)})
 
         @GetMapping(value = "/students/", produces = {"application/json"})
     public ResponseEntity<?> listAllStudents()
