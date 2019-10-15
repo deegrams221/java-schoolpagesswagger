@@ -1,19 +1,32 @@
 package com.lambdaschool.school.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// adding custom swagger documentation in models
+@ApiModel(value = "Course", description = "The Course Entity")
+
 @Entity
 @Table(name = "course")
 public class Course
-{
+{    // adding custom swagger documentation for courseid
+    @ApiModelProperty(name = "courseid",
+            value = "primary key for Course",
+            required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long courseid;
 
+    // adding custom swagger documentation for coursename
+    @ApiModelProperty(name = "coursename",
+            value = "Course Name",
+            required = true,
+            example = "Intro%20To%20Metal")
     private String coursename;
 
     @ManyToOne
