@@ -39,8 +39,8 @@ public class CourseController
     // localhost:2019/courses/courses/paging/?page=1&size=10
     @GetMapping(value = "/courses/paging",
             produces = {"application/json"})
-    public ResponseEntity<?> ListAllCoursesByPage(@PageableDefault(page = 0,
-            size = 5) Pageable pageable)
+    public ResponseEntity<?> ListAllCoursesByPage(@PageableDefault(page = 1,
+            size = 3) Pageable pageable)
     {                        // findAllPageable(pageable.unpaged()) <- returns everything
         List<Course> myCourses = courseService.findAllPageable(pageable);
         return new ResponseEntity<>(myCourses, HttpStatus.OK);
