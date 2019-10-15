@@ -5,6 +5,8 @@ import com.lambdaschool.school.model.Student;
 import com.lambdaschool.school.service.StudentService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,18 @@ public class StudentController
                                                                 "Default sort order is ascending. " +
                                                                 "Multiple sort criteria are supported.")})
 
-    @GetMapping(value = "/students", produces = {"application/json"})
+    // paging and sorting
+    // localhost:2019/students/students/paging/?page=1&size=10
+    @GetMapping(value = "/students/paging",
+            produces = {"application/json"})
+    public ResponseEntity<?> ListAllRestaurantsByPage(@PageableDefault(page = 0,
+            size = 5) Pageable pageable)
+    {                        // findAllPageable(pageable.unpaged()) <- returns everything
+        List<Student> myRestaurants = studentService.findAllPageable(pageable);
+        return new ResponseEntity<>(myRestaurants, HttpStatus.OK);
+    }
+
+        @GetMapping(value = "/students/", produces = {"application/json"})
     public ResponseEntity<?> listAllStudents()
     {
         List<Student> myStudents = studentService.findAll();
