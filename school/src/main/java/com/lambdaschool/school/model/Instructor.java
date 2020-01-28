@@ -1,19 +1,33 @@
 package com.lambdaschool.school.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// adding custom swagger documentation in models
+@ApiModel(value = "Instructor", description = "The Instructor Entity")
+
 @Entity
 @Table(name = "instructor")
 public class Instructor
 {
+    // adding custom swagger documentation for instructid
+    @ApiModelProperty(name = "instructid",
+            value = "primary key for Instructor",
+            required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long instructid;
 
+    // adding custom swagger documentation for instructname
+    @ApiModelProperty(name = "instructname",
+            value = "Instructor Name",
+            required = true,
+            example = "Sammy%20Hagar")
     private String instructname;
 
     @OneToMany(mappedBy = "instructor")
